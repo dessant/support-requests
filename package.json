@@ -1,0 +1,25 @@
+{
+  "name": "support-requests",
+  "version": "0.1.0",
+  "description":
+    "A GitHub App built with Probot that comments on and closes issues labeled as support requests.",
+  "author": "Armin Sebastian",
+  "license": "MIT",
+  "repository": "https://github.com/dessant/support-requests",
+  "scripts": {
+    "start": "probot run ./src/index.js",
+    "update": "ncu --upgrade --upgradeAll && yarn",
+    "push": "git push --follow-tags origin master",
+    "release": "standard-version && yarn run push"
+  },
+  "dependencies": {
+    "probot": "^3.0.0"
+  },
+  "devDependencies": {
+    "npm-check-updates": "^2.12.1",
+    "standard-version": "^4.2.0"
+  },
+  "engines": {
+    "node": "^7.7"
+  }
+}
