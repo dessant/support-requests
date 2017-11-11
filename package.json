@@ -13,10 +13,10 @@
     "release": "standard-version && yarn run push"
   },
   "dependencies": {
-    "probot": "^3.0.0"
+    "probot": "^3.0.2"
   },
   "devDependencies": {
-    "npm-check-updates": "^2.12.1",
+    "npm-check-updates": "^2.13.0",
     "standard-version": "^4.2.0"
   },
   "engines": {
