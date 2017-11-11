@@ -3,7 +3,7 @@
 Support Requests is a GitHub App built with [Probot](https://github.com/probot/probot)
 that comments on and closes issues labeled as support requests.
 
-![](https://i.imgur.com/D1w1958.png)
+![](assets/screenshot.png)
 
 ## Supporting the Project
 

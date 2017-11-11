@@ -1,6 +1,6 @@
 A GitHub App that comments on and closes issues labeled as support requests.
 
-![](https://i.imgur.com/D1w1958.png)
+![](https://raw.githubusercontent.com/dessant/support-requests/master/assets/screenshot.png)
 
 ## Usage
 
