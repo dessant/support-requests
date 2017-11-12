@@ -35,7 +35,7 @@ module.exports = class Support {
     const {owner, repo, number} = this.context.issue();
     const {perform, supportComment, close, lock} = this.config;
 
-    if (supportComment) {
+    if (supportComment && !this.issueLocked()) {
       if (perform) {
         this.logger.info(`${owner}/${repo}#${number} is being commented on`);
         await this.context.github.issues.createComment({
