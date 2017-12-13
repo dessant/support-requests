@@ -12,7 +12,7 @@
     "release": "standard-version && yarn run push"
   },
   "dependencies": {
-    "probot": "^3.0.2"
+    "probot": "^3.0.3"
   },
   "devDependencies": {
     "npm-check-updates": "^2.13.0",
