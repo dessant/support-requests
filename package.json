@@ -12,6 +12,7 @@
     "release": "standard-version && yarn run push"
   },
   "dependencies": {
+    "joi": "^13.2.0",
     "probot": "^3.0.3"
   },
   "devDependencies": {

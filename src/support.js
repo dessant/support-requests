@@ -1,10 +1,8 @@
-const defaults = require('./defaults');
-
 module.exports = class Support {
-  constructor(context, config, logger) {
+  constructor(context, config, logger = console) {
     this.context = context;
-    this.config = Object.assign({}, defaults, config || {});
-    this.logger = logger || console;
+    this.config = config;
+    this.logger = logger;
   }
 
   hasLabel() {
