@@ -7,17 +7,20 @@
   "repository": "https://github.com/dessant/support-requests",
   "scripts": {
     "start": "probot run ./src/index.js",
+    "watch": "nodemon --exec 'npm start'",
     "update": "ncu --upgrade --upgradeAll && yarn",
     "push": "git push --follow-tags origin master",
     "release": "standard-version && yarn run push"
   },
   "dependencies": {
     "joi": "^13.2.0",
-    "probot": "^3.0.3"
+    "probot": "^6.1.0"
   },
   "devDependencies": {
-    "npm-check-updates": "^2.13.0",
-    "standard-version": "^4.2.0"
+    "nodemon": "^1.17.3",
+    "npm-check-updates": "^2.14.2",
+    "smee-client": "^1.0.1",
+    "standard-version": "^4.3.0"
   },
   "engines": {
     "node": "8.9.0",
