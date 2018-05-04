@@ -4,7 +4,11 @@ A GitHub App that comments on and closes issues labeled as support requests.
 
 ## Usage
 
-After installing the app, create `.github/support.yml` in the default branch to enable it:
+1. **[Install the GitHub App](https://github.com/apps/support)**
+2. Create `.github/support.yml` based on the template below
+3. Start labeling issues as support requests
+
+Create `.github/support.yml` in the default branch to enable the app. The file can be empty, or it can override any of these default settings:
 
 ```yml
 # Configuration for support-requests - https://github.com/dessant/support-requests

@@ -16,7 +16,7 @@ or [Bitcoin](https://goo.gl/uJUAaU).
 ## Usage
 
 1. **[Install the GitHub App](https://github.com/apps/support)**
-2. Create `.github/support.yml` based on the following template
+2. Create `.github/support.yml` based on the template below
 3. Start labeling issues as support requests
 
 Create `.github/support.yml` in the default branch to enable the app.
