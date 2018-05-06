@@ -1,6 +1,6 @@
 {
   "name": "support-requests",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A GitHub App built with Probot that comments on and closes issues labeled as support requests.",
   "author": "Armin Sebastian",
   "license": "MIT",
