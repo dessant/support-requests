@@ -8,7 +8,7 @@
     "url": "https://github.com/dessant/support-requests.git",
     "type": "git"
   },
-  "bugs": "https://github.com/dessant/support-requests/issues"
+  "bugs": "https://github.com/dessant/support-requests/issues",
   "main": "src/index.js",
   "scripts": {
     "start": "probot run ./src/index.js",
