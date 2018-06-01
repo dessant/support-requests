@@ -10,7 +10,7 @@ A GitHub App that comments on and closes issues labeled as support requests.
 
 Create `.github/support.yml` in the default branch to enable the app. The file can be empty, or it can override any of these default settings:
 
-```yml
+```yaml
 # Configuration for support-requests - https://github.com/dessant/support-requests
 
 # Label used to mark issues as support requests

@@ -22,7 +22,7 @@ or [Bitcoin](https://goo.gl/uJUAaU).
 Create `.github/support.yml` in the default branch to enable the app.
 The file can be empty, or it can override any of these default settings:
 
-```yml
+```yaml
 # Configuration for support-requests - https://github.com/dessant/support-requests
 
 # Label used to mark issues as support requests
