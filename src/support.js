@@ -2,7 +2,7 @@ module.exports = class Support {
   constructor(context, config, logger) {
     this.context = context;
     this.config = config;
-    this.logger = logger;
+    this.log = logger;
   }
 
   get hasSupportLabel() {
@@ -26,63 +26,60 @@ module.exports = class Support {
     return this.context.payload.issue.locked;
   }
 
+  getLogMessage(message) {
+    if (!this.config.perform) {
+      message += ' (dry run)';
+    }
+    return message;
+  }
+
   async labeled() {
     if (!this.supportLabelTouched) {
       return;
     }
 
     const {payload, github} = this.context;
-    const {owner, repo, number} = this.context.issue();
+    const issue = this.context.issue();
+    const {owner, repo} = issue;
     const {perform, supportComment, close, lock} = this.config;
 
     if (supportComment && !this.issueLocked) {
-      const commentBody = supportComment.replace(
-        /{issue-author}/,
-        payload.issue.user.login
+      this.log.info(
+        {owner, repo, issue: issue.number},
+        this.getLogMessage('Commenting')
       );
       if (perform) {
-        this.logger.info(`${owner}/${repo}#${number} is being commented on`);
+        const commentBody = supportComment.replace(
+          /{issue-author}/,
+          payload.issue.user.login
+        );
         await github.issues.createComment({
-          owner,
-          repo,
-          number,
+          ...issue,
           body: commentBody
         });
-      } else {
-        this.logger.info(
-          `${owner}/${repo}#${number} would have been commented on (dry run)`
-        );
       }
     }
 
     if (close && this.issueOpen) {
+      this.log.info(
+        {owner, repo, issue: issue.number},
+        this.getLogMessage('Closing')
+      );
       if (perform) {
-        this.logger.info(`${owner}/${repo}#${number} is being closed`);
         await github.issues.edit({
-          owner,
-          repo,
-          number,
+          ...issue,
           state: 'closed'
         });
-      } else {
-        this.logger.info(
-          `${owner}/${repo}#${number} would have been closed (dry run)`
-        );
       }
     }
 
     if (lock && !this.issueLocked) {
+      this.log.info(
+        {owner, repo, issue: issue.number},
+        this.getLogMessage('Locking')
+      );
       if (perform) {
-        this.logger.info(`${owner}/${repo}#${number} is being locked`);
-        await github.issues.lock({
-          owner,
-          repo,
-          number
-        });
-      } else {
-        this.logger.info(
-          `${owner}/${repo}#${number} would have been locked (dry run)`
-        );
+        await github.issues.lock(issue);
       }
     }
   }
@@ -93,37 +90,30 @@ module.exports = class Support {
     }
 
     const github = this.context.github;
-    const {owner, repo, number} = this.context.issue();
+    const issue = this.context.issue();
+    const {owner, repo} = issue;
     const {perform, close, lock} = this.config;
 
     if (close && !this.issueOpen) {
+      this.log.info(
+        {owner, repo, issue: issue.number},
+        this.getLogMessage('Opening')
+      );
       if (perform) {
-        this.logger.info(`${owner}/${repo}#${number} is being reopened`);
         await github.issues.edit({
-          owner,
-          repo,
-          number,
+          ...issue,
           state: 'open'
         });
-      } else {
-        this.logger.info(
-          `${owner}/${repo}#${number} would have been reopened (dry run)`
-        );
       }
     }
 
     if (lock && this.issueLocked) {
+      this.log.info(
+        {owner, repo, issue: issue.number},
+        this.getLogMessage('Unlocking')
+      );
       if (perform) {
-        this.logger.info(`${owner}/${repo}#${number} is being unlocked`);
-        await github.issues.unlock({
-          owner,
-          repo,
-          number
-        });
-      } else {
-        this.logger.info(
-          `${owner}/${repo}#${number} would have been unlocked (dry run)`
-        );
+        await github.issues.unlock(issue);
       }
     }
   }
@@ -134,37 +124,30 @@ module.exports = class Support {
     }
 
     const github = this.context.github;
-    const {owner, repo, number} = this.context.issue();
+    const issue = this.context.issue();
+    const {owner, repo} = issue;
     const {perform, supportLabel, close, lock} = this.config;
 
     if (close) {
+      this.log.info(
+        {owner, repo, issue: issue.number},
+        this.getLogMessage('Unlabeling')
+      );
       if (perform) {
-        this.logger.info(`${owner}/${repo}#${number} is being unlabeled`);
         await github.issues.removeLabel({
-          owner,
-          repo,
-          number,
+          ...issue,
           name: supportLabel
         });
-      } else {
-        this.logger.info(
-          `${owner}/${repo}#${number} would have been unlabeled (dry run)`
-        );
       }
     }
 
     if (lock && this.issueLocked) {
+      this.log.info(
+        {owner, repo, issue: issue.number},
+        this.getLogMessage('Unlocking')
+      );
       if (perform) {
-        this.logger.info(`${owner}/${repo}#${number} is being unlocked`);
-        await github.issues.unlock({
-          owner,
-          repo,
-          number
-        });
-      } else {
-        this.logger.info(
-          `${owner}/${repo}#${number} would have been unlocked (dry run)`
-        );
+        await github.issues.unlock(issue);
       }
     }
   }
