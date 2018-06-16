@@ -31,17 +31,18 @@ module.exports = class Support {
       return;
     }
 
+    const {payload, github} = this.context;
     const {owner, repo, number} = this.context.issue();
     const {perform, supportComment, close, lock} = this.config;
 
     if (supportComment && !this.issueLocked) {
       const commentBody = supportComment.replace(
         /{issue-author}/,
-        this.context.payload.issue.user.login
+        payload.issue.user.login
       );
       if (perform) {
         this.logger.info(`${owner}/${repo}#${number} is being commented on`);
-        await this.context.github.issues.createComment({
+        await github.issues.createComment({
           owner,
           repo,
           number,
@@ -57,7 +58,7 @@ module.exports = class Support {
     if (close && this.issueOpen) {
       if (perform) {
         this.logger.info(`${owner}/${repo}#${number} is being closed`);
-        await this.context.github.issues.edit({
+        await github.issues.edit({
           owner,
           repo,
           number,
@@ -73,7 +74,7 @@ module.exports = class Support {
     if (lock && !this.issueLocked) {
       if (perform) {
         this.logger.info(`${owner}/${repo}#${number} is being locked`);
-        await this.context.github.issues.lock({
+        await github.issues.lock({
           owner,
           repo,
           number
@@ -91,13 +92,14 @@ module.exports = class Support {
       return;
     }
 
+    const github = this.context.github;
     const {owner, repo, number} = this.context.issue();
     const {perform, close, lock} = this.config;
 
     if (close && !this.issueOpen) {
       if (perform) {
         this.logger.info(`${owner}/${repo}#${number} is being reopened`);
-        await this.context.github.issues.edit({
+        await github.issues.edit({
           owner,
           repo,
           number,
@@ -113,7 +115,7 @@ module.exports = class Support {
     if (lock && this.issueLocked) {
       if (perform) {
         this.logger.info(`${owner}/${repo}#${number} is being unlocked`);
-        await this.context.github.issues.unlock({
+        await github.issues.unlock({
           owner,
           repo,
           number
@@ -131,13 +133,14 @@ module.exports = class Support {
       return;
     }
 
+    const github = this.context.github;
     const {owner, repo, number} = this.context.issue();
     const {perform, supportLabel, close, lock} = this.config;
 
     if (close) {
       if (perform) {
         this.logger.info(`${owner}/${repo}#${number} is being unlabeled`);
-        await this.context.github.issues.removeLabel({
+        await github.issues.removeLabel({
           owner,
           repo,
           number,
@@ -153,7 +156,7 @@ module.exports = class Support {
     if (lock && this.issueLocked) {
       if (perform) {
         this.logger.info(`${owner}/${repo}#${number} is being unlocked`);
-        await this.context.github.issues.unlock({
+        await github.issues.unlock({
           owner,
           repo,
           number
