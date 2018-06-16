@@ -1,32 +1,34 @@
-const Support = require('./support');
+const getMergedConfig = require('probot-config');
+
+const App = require('./support');
 const schema = require('./schema');
 
 module.exports = robot => {
   robot.on('issues.labeled', async context => {
-    const app = await getSupport(context);
+    const app = await getApp(context);
     if (app) {
       await app.labeled();
     }
   });
 
   robot.on('issues.unlabeled', async context => {
-    const app = await getSupport(context);
+    const app = await getApp(context);
     if (app) {
       await app.unlabeled();
     }
   });
 
   robot.on('issues.reopened', async context => {
-    const app = await getSupport(context);
+    const app = await getApp(context);
     if (app) {
       await app.reopened();
     }
   });
 
-  async function getSupport(context) {
+  async function getApp(context) {
     const config = await getConfig(context);
     if (config) {
-      return new Support(context, config, robot.log);
+      return new App(context, config, robot.log);
     }
   }
 
@@ -34,7 +36,7 @@ module.exports = robot => {
     const {owner, repo} = context.issue();
     let config;
     try {
-      let repoConfig = await context.config('support.yml');
+      let repoConfig = await getMergedConfig(context, 'support.yml');
       if (!repoConfig) {
         repoConfig = {perform: false};
       }

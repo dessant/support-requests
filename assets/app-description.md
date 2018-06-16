@@ -28,6 +28,9 @@ close: true
 
 # Lock issues marked as support requests
 lock: false
+
+# Repository to extend settings from
+# _extends: repo
 ```
 
 ## Supporting the Project
