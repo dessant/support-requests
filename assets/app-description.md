@@ -8,6 +8,8 @@ A GitHub App that comments on and closes issues labeled as support requests.
 2. Create `.github/support.yml` based on the template below
 3. Start labeling issues as support requests
 
+#### Configuration
+
 Create `.github/support.yml` in the default branch to enable the app. The file can be empty, or it can override any of these default settings:
 
 ```yaml
