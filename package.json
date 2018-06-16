@@ -22,7 +22,7 @@
     "src"
   ],
   "dependencies": {
-    "joi": "^13.3.0",
+    "joi": "^13.4.0",
     "probot": "^6.2.0",
     "probot-config": "^0.1.0"
   },
