@@ -33,6 +33,34 @@ module.exports = class Support {
     return message;
   }
 
+  async ensureUnlock(issue, lock, action) {
+    if (lock.active) {
+      if (!lock.hasOwnProperty('reason')) {
+        const {data: issueData} = await this.context.github.issues.get({
+          ...issue,
+          headers: {
+            Accept: 'application/vnd.github.sailor-v-preview+json'
+          }
+        });
+        lock.reason = issueData.active_lock_reason;
+      }
+      await this.context.github.issues.unlock(issue);
+      await action();
+      if (lock.reason) {
+        issue = {
+          ...issue,
+          lock_reason: lock.reason,
+          headers: {
+            Accept: 'application/vnd.github.sailor-v-preview+json'
+          }
+        };
+      }
+      await this.context.github.issues.lock(issue);
+    } else {
+      await action();
+    }
+  }
+
   async labeled() {
     if (!this.supportLabelTouched) {
       return;
@@ -43,7 +71,7 @@ module.exports = class Support {
     const {owner, repo} = issue;
     const {perform, supportComment, close, lock} = this.config;
 
-    if (supportComment && !this.issueLocked) {
+    if (supportComment) {
       this.log.info(
         {owner, repo, issue: issue.number},
         this.getLogMessage('Commenting')
@@ -53,10 +81,9 @@ module.exports = class Support {
           /{issue-author}/,
           payload.issue.user.login
         );
-        await github.issues.createComment({
-          ...issue,
-          body: commentBody
-        });
+        await this.ensureUnlock(issue, {active: this.issueLocked}, () =>
+          github.issues.createComment({...issue, body: commentBody})
+        );
       }
     }
 
@@ -66,10 +93,7 @@ module.exports = class Support {
         this.getLogMessage('Closing')
       );
       if (perform) {
-        await github.issues.edit({
-          ...issue,
-          state: 'closed'
-        });
+        await github.issues.edit({...issue, state: 'closed'});
       }
     }
 
@@ -79,7 +103,13 @@ module.exports = class Support {
         this.getLogMessage('Locking')
       );
       if (perform) {
-        await github.issues.lock(issue);
+        await github.issues.lock({
+          ...issue,
+          lock_reason: 'off-topic',
+          headers: {
+            Accept: 'application/vnd.github.sailor-v-preview+json'
+          }
+        });
       }
     }
   }
@@ -100,10 +130,7 @@ module.exports = class Support {
         this.getLogMessage('Opening')
       );
       if (perform) {
-        await github.issues.edit({
-          ...issue,
-          state: 'open'
-        });
+        await github.issues.edit({...issue, state: 'open'});
       }
     }
 
@@ -134,10 +161,7 @@ module.exports = class Support {
         this.getLogMessage('Unlabeling')
       );
       if (perform) {
-        await github.issues.removeLabel({
-          ...issue,
-          name: supportLabel
-        });
+        await github.issues.removeLabel({...issue, name: supportLabel});
       }
     }
 
