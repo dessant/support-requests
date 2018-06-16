@@ -34,13 +34,17 @@ module.exports = class Support {
     const {perform, supportComment, close, lock} = this.config;
 
     if (supportComment && !this.issueLocked()) {
+      const commentBody = supportComment.replace(
+        /{issue-author}/,
+        this.context.payload.issue.user.login
+      );
       if (perform) {
         this.logger.info(`${owner}/${repo}#${number} is being commented on`);
         await this.context.github.issues.createComment({
           owner,
           repo,
           number,
-          body: supportComment
+          body: commentBody
         });
       } else {
         this.logger.info(
