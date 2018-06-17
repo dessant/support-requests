@@ -1,3 +1,5 @@
+const uuidV4 = require('uuid/v4');
+
 module.exports = class Support {
   constructor(context, config, logger) {
     this.context = context;
@@ -24,13 +26,6 @@ module.exports = class Support {
 
   get issueLocked() {
     return this.context.payload.issue.locked;
-  }
-
-  getLogMessage(message) {
-    if (!this.config.perform) {
-      message += ' (dry run)';
-    }
-    return message;
   }
 
   async ensureUnlock(issue, lock, action) {
@@ -68,14 +63,11 @@ module.exports = class Support {
 
     const {payload, github} = this.context;
     const issue = this.context.issue();
-    const {owner, repo} = issue;
     const {perform, supportComment, close, lock} = this.config;
+    const meta = {task: uuidV4(), issue, perform};
 
     if (supportComment) {
-      this.log.info(
-        {owner, repo, issue: issue.number},
-        this.getLogMessage('Commenting')
-      );
+      this.log.info(meta, 'Commenting');
       if (perform) {
         const commentBody = supportComment.replace(
           /{issue-author}/,
@@ -88,20 +80,14 @@ module.exports = class Support {
     }
 
     if (close && this.issueOpen) {
-      this.log.info(
-        {owner, repo, issue: issue.number},
-        this.getLogMessage('Closing')
-      );
+      this.log.info(meta, 'Closing');
       if (perform) {
         await github.issues.edit({...issue, state: 'closed'});
       }
     }
 
     if (lock && !this.issueLocked) {
-      this.log.info(
-        {owner, repo, issue: issue.number},
-        this.getLogMessage('Locking')
-      );
+      this.log.info(meta, 'Locking');
       if (perform) {
         await github.issues.lock({
           ...issue,
@@ -121,24 +107,18 @@ module.exports = class Support {
 
     const github = this.context.github;
     const issue = this.context.issue();
-    const {owner, repo} = issue;
     const {perform, close, lock} = this.config;
+    const meta = {task: uuidV4(), issue, perform};
 
     if (close && !this.issueOpen) {
-      this.log.info(
-        {owner, repo, issue: issue.number},
-        this.getLogMessage('Opening')
-      );
+      this.log.info(meta, 'Opening');
       if (perform) {
         await github.issues.edit({...issue, state: 'open'});
       }
     }
 
     if (lock && this.issueLocked) {
-      this.log.info(
-        {owner, repo, issue: issue.number},
-        this.getLogMessage('Unlocking')
-      );
+      this.log.info(meta, 'Unlocking');
       if (perform) {
         await github.issues.unlock(issue);
       }
@@ -152,24 +132,18 @@ module.exports = class Support {
 
     const github = this.context.github;
     const issue = this.context.issue();
-    const {owner, repo} = issue;
     const {perform, supportLabel, close, lock} = this.config;
+    const meta = {task: uuidV4(), issue, perform};
 
     if (close) {
-      this.log.info(
-        {owner, repo, issue: issue.number},
-        this.getLogMessage('Unlabeling')
-      );
+      this.log.info(meta, 'Unlabeling');
       if (perform) {
         await github.issues.removeLabel({...issue, name: supportLabel});
       }
     }
 
     if (lock && this.issueLocked) {
-      this.log.info(
-        {owner, repo, issue: issue.number},
-        this.getLogMessage('Unlocking')
-      );
+      this.log.info(meta, 'Unlocking');
       if (perform) {
         await github.issues.unlock(issue);
       }
