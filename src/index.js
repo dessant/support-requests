@@ -1,9 +1,13 @@
+const uuidV4 = require('uuid/v4');
 const getMergedConfig = require('probot-config');
 
 const App = require('./support');
 const schema = require('./schema');
 
-module.exports = robot => {
+module.exports = async robot => {
+  const github = await robot.auth();
+  const appName = (await github.apps.get({})).data.name;
+
   robot.on('issues.labeled', async context => {
     const app = await getApp(context);
     if (app) {
@@ -26,18 +30,20 @@ module.exports = robot => {
   });
 
   async function getApp(context) {
-    const config = await getConfig(context);
+    const logger = context.log.child({appName, session: uuidV4()});
+    const config = await getConfig(context, logger);
     if (config) {
-      return new App(context, config, robot.log);
+      return new App(context, config, logger);
     }
   }
 
-  async function getConfig(context) {
-    const {owner, repo} = context.issue();
+  async function getConfig(context, log, file = 'support.yml') {
     let config;
+    const repo = context.repo();
     try {
-      let repoConfig = await getMergedConfig(context, 'support.yml');
+      let repoConfig = await getMergedConfig(context, file);
       if (!repoConfig) {
+        log.warn({repo, file}, 'Missing config');
         repoConfig = {perform: false};
       }
       const {error, value} = schema.validate(repoConfig);
@@ -46,7 +52,7 @@ module.exports = robot => {
       }
       config = value;
     } catch (err) {
-      robot.log.warn({err: new Error(err), owner, repo}, 'Invalid config');
+      log.warn({err: new Error(err), repo, file}, 'Invalid config');
     }
 
     return config;

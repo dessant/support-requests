@@ -1,5 +1,3 @@
-const uuidV4 = require('uuid/v4');
-
 module.exports = class Support {
   constructor(context, config, logger) {
     this.context = context;
@@ -64,7 +62,7 @@ module.exports = class Support {
     const {payload, github} = this.context;
     const issue = this.context.issue();
     const {perform, supportComment, close, lock} = this.config;
-    const meta = {task: uuidV4(), issue, perform};
+    const meta = {issue, perform};
 
     if (supportComment) {
       this.log.info(meta, 'Commenting');
@@ -108,7 +106,7 @@ module.exports = class Support {
     const github = this.context.github;
     const issue = this.context.issue();
     const {perform, close, lock} = this.config;
-    const meta = {task: uuidV4(), issue, perform};
+    const meta = {issue, perform};
 
     if (close && !this.issueOpen) {
       this.log.info(meta, 'Opening');
@@ -133,7 +131,7 @@ module.exports = class Support {
     const github = this.context.github;
     const issue = this.context.issue();
     const {perform, supportLabel, close, lock} = this.config;
-    const meta = {task: uuidV4(), issue, perform};
+    const meta = {issue, perform};
 
     if (close) {
       this.log.info(meta, 'Unlabeling');
