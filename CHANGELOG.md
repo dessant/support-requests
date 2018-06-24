@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/dessant/support-requests/compare/v0.2.1...v0.3.0) (2018-06-24)
+
+
+### Bug Fixes
+
+* account for missing label object when label is removed ([eb1e76d](https://github.com/dessant/support-requests/commit/eb1e76d))
+* add `_extends` option to config schema ([62d0c05](https://github.com/dessant/support-requests/commit/62d0c05))
+
+
+### Features
+
+* add option for setting lock reason ([e91b1c8](https://github.com/dessant/support-requests/commit/e91b1c8))
+* add support for mentioning the issue author ([b43e76e](https://github.com/dessant/support-requests/commit/b43e76e))
+* also comment when issue is locked and set lock reason ([67fad24](https://github.com/dessant/support-requests/commit/67fad24))
+* extend settings from a different repository ([6affa95](https://github.com/dessant/support-requests/commit/6affa95))
+
+
+
 <a name="0.2.1"></a>
 ## [0.2.1](https://github.com/dessant/support-requests/compare/v0.2.0...v0.2.1) (2018-06-01)
 
