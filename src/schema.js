@@ -28,6 +28,12 @@ const schema = Joi.object().keys({
     .default(false)
     .description('Lock issues marked as support requests'),
 
+  setLockReason: Joi.boolean()
+    .default(true)
+    .description(
+      'Assign `off-topic` as the reason for locking. Set to `false` to disable'
+    ),
+
   _extends: Joi.string().description('Repository to extend settings from'),
 
   perform: Joi.boolean().default(!process.env.DRY_RUN)

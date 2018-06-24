@@ -28,9 +28,10 @@ module.exports = class Support {
   }
 
   async ensureUnlock(issue, lock, action) {
+    const github = this.context.github;
     if (lock.active) {
       if (!lock.hasOwnProperty('reason')) {
-        const {data: issueData} = await this.context.github.issues.get({
+        const {data: issueData} = await github.issues.get({
           ...issue,
           headers: {
             Accept: 'application/vnd.github.sailor-v-preview+json'
@@ -38,7 +39,7 @@ module.exports = class Support {
         });
         lock.reason = issueData.active_lock_reason;
       }
-      await this.context.github.issues.unlock(issue);
+      await github.issues.unlock(issue);
       await action();
       if (lock.reason) {
         issue = {
@@ -49,7 +50,7 @@ module.exports = class Support {
           }
         };
       }
-      await this.context.github.issues.lock(issue);
+      await github.issues.lock(issue);
     } else {
       await action();
     }
@@ -62,7 +63,7 @@ module.exports = class Support {
 
     const {payload, github} = this.context;
     const issue = this.context.issue();
-    const {perform, supportComment, close, lock} = this.config;
+    const {perform, supportComment, close, lock, setLockReason} = this.config;
     const meta = {issue, perform};
 
     if (supportComment) {
@@ -88,13 +89,19 @@ module.exports = class Support {
     if (lock && !this.issueLocked) {
       this.log.info(meta, 'Locking');
       if (perform) {
-        await github.issues.lock({
-          ...issue,
-          lock_reason: 'off-topic',
-          headers: {
-            Accept: 'application/vnd.github.sailor-v-preview+json'
-          }
-        });
+        let params;
+        if (setLockReason) {
+          params = {
+            ...issue,
+            lock_reason: 'off-topic',
+            headers: {
+              Accept: 'application/vnd.github.sailor-v-preview+json'
+            }
+          };
+        } else {
+          params = issue;
+        }
+        await github.issues.lock(params);
       }
     }
   }
