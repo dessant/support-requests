@@ -15,7 +15,8 @@ module.exports = class Support {
   }
 
   get supportLabelTouched() {
-    return this.context.payload.label.name === this.config.supportLabel;
+    const label = this.context.payload.label;
+    return label && label.name === this.config.supportLabel;
   }
 
   get issueOpen() {
