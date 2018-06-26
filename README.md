@@ -1,5 +1,7 @@
 # Support Requests
 
+[![npm](https://img.shields.io/npm/v/support-requests.svg?style=flat-square&colorB=007EC6)](https://www.npmjs.com/package/support-requests)
+
 Support Requests is a GitHub App built with [Probot](https://github.com/probot/probot)
 that comments on and closes issues labeled as support requests.
 
