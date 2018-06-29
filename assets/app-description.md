@@ -4,7 +4,7 @@ A GitHub App that comments on and closes issues labeled as support requests.
 
 ## Usage
 
-1. **[Install the GitHub App](https://github.com/apps/support)** for the required repositories
+1. **[Install the GitHub App](https://github.com/apps/support)** for the intended repositories
 2. Create `.github/support.yml` based on the template below
 3. Start labeling issues as support requests
 
