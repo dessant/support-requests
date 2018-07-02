@@ -7,5 +7,6 @@ This app requires these **Permissions & events** for the GitHub App:
 
 - Issues - **Read & Write**
   - [x] Check the box for **Issues** events
+- Repository metadata - **Read-only**
 - Single File - **Read-only**
   - Path: `.github/support.yml`
