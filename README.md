@@ -2,7 +2,6 @@
 
 [![Build Status](https://img.shields.io/travis/com/dessant/support-requests/master.svg)](https://travis-ci.com/dessant/support-requests)
 [![Version](https://img.shields.io/npm/v/support-requests.svg?colorB=007EC6)](https://www.npmjs.com/package/support-requests)
-[![License](https://img.shields.io/github/license/dessant/support-requests.svg)](https://github.com/dessant/support-requests/blob/master/LICENSE)
 
 Support Requests is a GitHub App built with [Probot](https://github.com/probot/probot)
 that comments on and closes issues labeled as support requests.
