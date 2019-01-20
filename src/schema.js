@@ -2,11 +2,18 @@ const Joi = require('joi');
 
 const schema = Joi.object().keys({
   supportLabel: Joi.string()
+    .trim()
+    .max(50)
     .default('support')
     .description('Label used to mark issues as support requests'),
 
   supportComment: Joi.alternatives()
-    .try(Joi.string(), Joi.boolean().only(false))
+    .try(
+      Joi.string()
+        .trim()
+        .max(10000),
+      Joi.boolean().only(false)
+    )
     .error(() => '"supportComment" must be a string or false')
     .default(
       ':wave: @{issue-author}, we use the issue tracker exclusively ' +
@@ -34,7 +41,10 @@ const schema = Joi.object().keys({
       'Assign `off-topic` as the reason for locking. Set to `false` to disable'
     ),
 
-  _extends: Joi.string().description('Repository to extend settings from'),
+  _extends: Joi.string()
+    .trim()
+    .max(260)
+    .description('Repository to extend settings from'),
 
   perform: Joi.boolean().default(!process.env.DRY_RUN)
 });
