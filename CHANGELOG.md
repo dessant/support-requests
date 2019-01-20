@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.4.3"></a>
+## [0.4.3](https://github.com/dessant/support-requests/compare/v0.4.2...v0.4.3) (2019-01-20)
+
+
+### Bug Fixes
+
+* apply stricter config validation ([c5b97f4](https://github.com/dessant/support-requests/commit/c5b97f4))
+
+
+
 <a name="0.4.2"></a>
 ## [0.4.2](https://github.com/dessant/support-requests/compare/v0.4.1...v0.4.2) (2018-10-03)
 
