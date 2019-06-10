@@ -62,7 +62,9 @@ module.exports = class Support {
     }
 
     const {payload, github} = this.context;
-    const issue = this.context.issue();
+    const issue = this.context.repo({
+      issue_number: this.context.issue().number
+    });
     const {perform, supportComment, close, lock, setLockReason} = this.config;
     const meta = {issue, perform};
 
@@ -82,7 +84,7 @@ module.exports = class Support {
     if (close && this.issueOpen) {
       this.log.info(meta, 'Closing');
       if (perform) {
-        await github.issues.edit({...issue, state: 'closed'});
+        await github.issues.update({...issue, state: 'closed'});
       }
     }
 
@@ -112,14 +114,16 @@ module.exports = class Support {
     }
 
     const github = this.context.github;
-    const issue = this.context.issue();
+    const issue = this.context.repo({
+      issue_number: this.context.issue().number
+    });
     const {perform, close, lock} = this.config;
     const meta = {issue, perform};
 
     if (close && !this.issueOpen) {
       this.log.info(meta, 'Opening');
       if (perform) {
-        await github.issues.edit({...issue, state: 'open'});
+        await github.issues.update({...issue, state: 'open'});
       }
     }
 
@@ -137,7 +141,9 @@ module.exports = class Support {
     }
 
     const github = this.context.github;
-    const issue = this.context.issue();
+    const issue = this.context.repo({
+      issue_number: this.context.issue().number
+    });
     const {perform, supportLabel, close, lock} = this.config;
     const meta = {issue, perform};
 
