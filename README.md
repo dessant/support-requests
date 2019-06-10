@@ -12,8 +12,10 @@ that comments on and closes issues labeled as support requests.
 
 The continued development of Support Requests is made possible
 thanks to the support of awesome backers. If you'd like to join them,
-please consider contributing with [Patreon](https://www.patreon.com/dessant),
-[PayPal](https://www.paypal.me/ArminSebastian) or [Bitcoin](https://goo.gl/uJUAaU).
+please consider contributing with
+[Patreon](https://armin.dev/go/patreon?pr=support-requests&src=repo),
+[PayPal](https://armin.dev/go/paypal?pr=support-requests&src=repo) or
+[Bitcoin](https://armin.dev/go/bitcoin?pr=support-requests&src=repo).
 
 ## Usage
 
@@ -22,7 +24,7 @@ please consider contributing with [Patreon](https://www.patreon.com/dessant),
 2. Create `.github/support.yml` based on the template below
 3. Start labeling issues as support requests
 
-⚠️ **If possible, install the app only for select repositories.
+**If possible, install the app only for select repositories.
 Do not leave the `All repositories` option selected, unless you intend
 to use the app for all current and future repositories.**
 

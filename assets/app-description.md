@@ -2,13 +2,17 @@ A GitHub App that comments on and closes issues labeled as support requests.
 
 ![](https://raw.githubusercontent.com/dessant/support-requests/master/assets/screenshot.png)
 
+## Supporting the Project
+
+The continued development of Support Requests is made possible thanks to the support of awesome backers. If you'd like to join them, please consider contributing with [Patreon](https://armin.dev/go/patreon?pr=support-requests&src=app), [PayPal](https://armin.dev/go/paypal?pr=support-requests&src=app) or [Bitcoin](https://armin.dev/go/bitcoin?pr=support-requests&src=app).
+
 ## Usage
 
 1. **[Install the GitHub App](https://github.com/apps/support)** for the intended repositories
 2. Create `.github/support.yml` based on the template below
 3. Start labeling issues as support requests
 
-⚠️ **If possible, install the app only for select repositories. Do not leave the `All repositories` option selected, unless you intend to use the app for all current and future repositories.**
+**If possible, install the app only for select repositories. Do not leave the `All repositories` option selected, unless you intend to use the app for all current and future repositories.**
 
 #### Configuration
 
@@ -39,7 +43,3 @@ setLockReason: true
 # Repository to extend settings from
 # _extends: repo
 ```
-
-## Supporting the Project
-
-The continued development of Support Requests is made possible thanks to the support of awesome backers. If you'd like to join them, please consider contributing with [Patreon](https://www.patreon.com/dessant), [PayPal](https://www.paypal.me/ArminSebastian) or [Bitcoin](https://goo.gl/uJUAaU).
