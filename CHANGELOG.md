@@ -1,6 +1,20 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.0.0](https://github.com/dessant/support-requests/compare/v0.4.3...v1.0.0) (2019-06-10)
+
+
+### Features
+
+* update dependencies ([64530c9](https://github.com/dessant/support-requests/commit/64530c9))
+
+
+### BREAKING CHANGES
+
+* probot < 9.2.13 no longer supported.
+
+
 
 <a name="0.4.3"></a>
 ## [0.4.3](https://github.com/dessant/support-requests/compare/v0.4.2...v0.4.3) (2019-01-20)
