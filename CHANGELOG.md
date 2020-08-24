@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/dessant/support-requests/compare/v1.0.1...v2.0.0) (2020-08-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* The deployment method and configuration options have changed.
+
+### Features
+
+* move to GitHub Actions ([4777aa0](https://github.com/dessant/support-requests/commit/4777aa0377f867dbeb97eccd63414255a1fc739a))
+
 ### [1.0.1](https://github.com/dessant/support-requests/compare/v1.0.0...v1.0.1) (2019-10-25)
 
 

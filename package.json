@@ -1,6 +1,6 @@
 {
   "name": "support-requests",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "A GitHub Action that comments on and closes issues labeled as support requests.",
   "author": "Armin Sebastian",
   "license": "MIT",
