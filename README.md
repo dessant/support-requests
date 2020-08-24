@@ -1,10 +1,10 @@
 # Support Requests
 
-[![Build Status](https://img.shields.io/travis/com/dessant/support-requests/master.svg)](https://travis-ci.com/dessant/support-requests)
-[![Version](https://img.shields.io/npm/v/support-requests.svg?colorB=007EC6)](https://www.npmjs.com/package/support-requests)
+Support Requests is a GitHub Action that comments on
+and closes issues labeled as support requests.
 
-Support Requests is a GitHub App built with [Probot](https://github.com/probot/probot)
-that comments on and closes issues labeled as support requests.
+> The legacy version of this project can be found
+[here](https://github.com/dessant/support-requests-app).
 
 ![](assets/screenshot.png)
 
@@ -17,57 +17,105 @@ please consider contributing with
 [PayPal](https://armin.dev/go/paypal?pr=support-requests&src=repo) or
 [Bitcoin](https://armin.dev/go/bitcoin?pr=support-requests&src=repo).
 
+## Description
+
+Support Requests can perform the following actions when an issue
+is labeled, unlabeled or reopened:
+
+* The support label is added: leave a comment, close and lock the issue
+* The support label is removed: reopen and unlock the issue
+* The issue is reopened: remove the support label, unlock the issue
+
 ## Usage
 
-1. **[Install the GitHub App](https://github.com/apps/support)**
-   for the intended repositories
-2. Create `.github/support.yml` based on the template below
-3. Start labeling issues as support requests
+Create a workflow file named `support.yml` in the `.github/workflows` directory,
+use one of the [example workflows](#examples) to get started.
 
-**If possible, install the app only for select repositories.
-Do not leave the `All repositories` option selected, unless you intend
-to use the app for all current and future repositories.**
+### Inputs
 
-#### Configuration
+The action can be configured using [input parameters](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstepswith).
+All parameters are optional, except `github-token`.
 
-Create `.github/support.yml` in the default branch to enable the app,
-or add it at the same file path to a repository named `.github`.
-The file can be empty, or it can override any of these default settings:
+- **`github-token`**
+  - GitHub access token, value must be `${{ github.token }}`
+  - Required
+- **`support-label`**
+  - Label used to mark issues as support requests
+  - Optional, defaults to `support`
+- **`issue-comment`**
+  - Comment to post on issues marked as support requests,
+    `{issue-author}` is an optional placeholder
+  - Optional, defaults to `:wave: @{issue-author}, we use the issue tracker
+    exclusively for bug reports and feature requests. However, this issue
+    appears to be a support request. Please use our support channels
+    to get help with the project.`
+- **`close-issue`**
+  - Close issues marked as support requests,
+    value must be either `true` or `false`
+  - Optional, defaults to `true`
+- **`lock-issue`**
+  - Lock issues marked as support requests,
+    value must be either `true` or `false`
+  - Optional, defaults to `false`
+- **`issue-lock-reason`**
+  - Reason for locking issues, value must be one
+    of `resolved`, `off-topic`, `too heated` or `spam`
+  - Optional, defaults to `off-topic`
+
+## Examples
+
+The following workflow will comment on and close issues
+marked as support requests.
 
 ```yaml
-# Configuration for Support Requests - https://github.com/dessant/support-requests
+name: 'Support requests'
 
-# Label used to mark issues as support requests
-supportLabel: support
+on:
+  issues:
+    types: [labeled, unlabeled, reopened]
 
-# Comment to post on issues marked as support requests, `{issue-author}` is an
-# optional placeholder. Set to `false` to disable
-supportComment: >
-  :wave: @{issue-author}, we use the issue tracker exclusively for bug reports
-  and feature requests. However, this issue appears to be a support request.
-  Please use our support channels to get help with the project.
-
-# Close issues marked as support requests
-close: true
-
-# Lock issues marked as support requests
-lock: false
-
-# Assign `off-topic` as the reason for locking. Set to `false` to disable
-setLockReason: true
-
-# Repository to extend settings from
-# _extends: repo
+jobs:
+  support:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dessant/support-requests@v2
+        with:
+          github-token: ${{ github.token }}
 ```
 
-## Deployment
+### Available input parameters
 
-See [docs/deploy.md](docs/deploy.md) if you would like to run your own
-instance of this app.
+This workflow declares all the available input parameters of the action
+and their default values. All parameters can be omitted, except `github-token`.
+
+```yaml
+name: 'Support requests'
+
+on:
+  issues:
+    types: [labeled, unlabeled, reopened]
+
+jobs:
+  support:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dessant/support-requests@v2
+        with:
+          github-token: ${{ github.token }}
+          support-label: 'support'
+          issue-comment: >
+            :wave: @{issue-author}, we use the issue tracker exclusively
+            for bug reports and feature requests. However, this issue appears
+            to be a support request. Please use our support channels
+            to get help with the project.
+          close-issue: true
+          lock-issue: false
+          issue-lock-reason: 'off-topic'
+```
 
 ## License
 
-Copyright (c) 2017-2019 Armin Sebastian
+Copyright (c) 2017-2020 Armin Sebastian
 
 This software is released under the terms of the MIT License.
 See the [LICENSE](LICENSE) file for further information.

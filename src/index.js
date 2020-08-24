@@ -1,69 +1,159 @@
-const uuidV4 = require('uuid/v4');
-const sendMessage = require('probot-messages');
+const core = require('@actions/core');
+const github = require('@actions/github');
 
-const App = require('./support');
 const schema = require('./schema');
 
-module.exports = async robot => {
-  const github = await robot.auth();
-  const appName = (await github.apps.getAuthenticated()).data.name;
+async function run() {
+  try {
+    const config = getConfig();
+    const client = github.getOctokit(config['github-token']);
 
-  robot.on('issues.labeled', async context => {
-    const app = await getApp(context);
-    if (app) {
+    const app = new App(config, client);
+    if (github.context.payload.action === 'labeled') {
       await app.labeled();
-    }
-  });
-
-  robot.on('issues.unlabeled', async context => {
-    const app = await getApp(context);
-    if (app) {
+    } else if (github.context.payload.action === 'unlabeled') {
       await app.unlabeled();
-    }
-  });
-
-  robot.on('issues.reopened', async context => {
-    const app = await getApp(context);
-    if (app) {
+    } else if (github.context.payload.action === 'reopened') {
       await app.reopened();
     }
-  });
+  } catch (err) {
+    core.setFailed(err);
+  }
+}
 
-  async function getApp(context) {
-    const logger = context.log.child({appName, session: uuidV4()});
-    const config = await getConfig(context, logger);
-    if (config) {
-      return new App(context, config, logger);
+class App {
+  constructor(config, client) {
+    this.config = config;
+    this.client = client;
+  }
+
+  async labeled() {
+    if (github.context.payload.label.name !== this.config['support-label']) {
+      return;
+    }
+
+    const issueData = github.context.payload.issue;
+    const issue = {...github.context.repo, issue_number: issueData.number};
+
+    const comment = this.config['issue-comment'];
+    if (comment) {
+      core.debug(`Commenting (issue: ${issue.issue_number})`);
+      const commentBody = comment.replace(
+        /{issue-author}/,
+        issueData.user.login
+      );
+      await this.ensureUnlock(
+        issue,
+        {active: issueData.locked, reason: issueData.active_lock_reason},
+        () =>
+          this.client.issues
+            .createComment({...issue, body: commentBody})
+            .catch(err => core.warning(err.toString()))
+      );
+    }
+
+    if (this.config['close-issue'] && issueData.state === 'open') {
+      core.debug(`Closing (issue: ${issue.issue_number})`);
+      await this.client.issues.update({...issue, state: 'closed'});
+    }
+
+    if (this.config['lock-issue'] && !issueData.locked) {
+      core.debug(`Locking (issue: ${issue.issue_number})`);
+      let params;
+      const lockReason = this.config['issue-lock-reason'];
+      if (lockReason) {
+        params = {
+          ...issue,
+          lock_reason: lockReason,
+          headers: {
+            accept: 'application/vnd.github.sailor-v-preview+json'
+          }
+        };
+      } else {
+        params = issue;
+      }
+      await this.client.issues.lock(params);
     }
   }
 
-  async function getConfig(context, log, file = 'support.yml') {
-    let config;
-    const repo = context.repo();
-    try {
-      let repoConfig = await context.config(file);
-      if (!repoConfig) {
-        repoConfig = {perform: false};
-      }
-      const {error, value} = schema.validate(repoConfig);
-      if (error) {
-        throw error;
-      }
-      config = value;
-    } catch (err) {
-      log.warn({err: new Error(err), repo, file}, 'Invalid config');
-      if (['YAMLException', 'ValidationError'].includes(err.name)) {
-        await sendMessage(
-          robot,
-          context,
-          '[{appName}] Configuration error',
-          '[{appName}]({appUrl}) has encountered a configuration error in ' +
-            `\`${file}\`.\n\`\`\`\n${err.toString()}\n\`\`\``,
-          {update: 'The configuration error is still occurring.'}
-        );
-      }
+  async unlabeled() {
+    if (github.context.payload.label.name !== this.config['support-label']) {
+      return;
     }
 
-    return config;
+    const issueData = github.context.payload.issue;
+    const issue = {...github.context.repo, issue_number: issueData.number};
+
+    if (this.config['close-issue'] && issueData.state === 'closed') {
+      core.debug(`Reopening (issue: ${issue.issue_number})`);
+      await this.client.issues.update({...issue, state: 'open'});
+    }
+
+    if (this.config['lock-issue'] && issueData.locked) {
+      core.debug(`Unlocking (issue: ${issue.issue_number})`);
+      await this.client.issues.unlock(issue);
+    }
   }
-};
+
+  async reopened() {
+    const issueData = github.context.payload.issue;
+    const supportLabel = this.config['support-label'];
+
+    if (!issueData.labels.map(label => label.name).includes(supportLabel)) {
+      return;
+    }
+
+    const issue = {...github.context.repo, issue_number: issueData.number};
+
+    core.debug(`Unlabeling (issue: ${issue.issue_number})`);
+    await this.client.issues.removeLabel({...issue, name: supportLabel});
+
+    if (this.config['lock-issue'] && issueData.locked) {
+      core.debug(`Unlocking (issue: ${issue.issue_number})`);
+      await this.client.issues.unlock(issue);
+    }
+  }
+
+  async ensureUnlock(issue, lock, action) {
+    if (lock.active) {
+      if (!lock.hasOwnProperty('reason')) {
+        const {data: issueData} = await this.client.issues.get({
+          ...issue,
+          headers: {
+            Accept: 'application/vnd.github.sailor-v-preview+json'
+          }
+        });
+        lock.reason = issueData.active_lock_reason;
+      }
+      await this.client.issues.unlock(issue);
+      await action();
+      if (lock.reason) {
+        issue = {
+          ...issue,
+          lock_reason: lock.reason,
+          headers: {
+            Accept: 'application/vnd.github.sailor-v-preview+json'
+          }
+        };
+      }
+      await this.client.issues.lock(issue);
+    } else {
+      await action();
+    }
+  }
+}
+
+function getConfig() {
+  const input = Object.fromEntries(
+    Object.keys(schema.describe().keys).map(item => [item, core.getInput(item)])
+  );
+
+  const {error, value} = schema.validate(input, {abortEarly: false});
+  if (error) {
+    throw error;
+  }
+
+  return value;
+}
+
+run();

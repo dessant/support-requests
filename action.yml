@@ -1,0 +1,31 @@
+name: 'Support Requests'
+description: 'Comment on and close issues labeled as support requests'
+author: 'Armin Sebastian'
+inputs:
+  github-token:
+    description: 'GitHub access token'
+    required: true
+  support-label:
+    description: 'Label used to mark issues as support requests'
+    default: 'support'
+  issue-comment:
+    description: 'Comment to post on issues marked as support requests, `{issue-author}` is an optional placeholder'
+    default: >
+      :wave: @{issue-author}, we use the issue tracker exclusively for bug reports
+      and feature requests. However, this issue appears to be a support request.
+      Please use our support channels to get help with the project.
+  close-issue:
+    description: 'Close issues marked as support requests, value must be either `true` or `false`'
+    default: true
+  lock-issue:
+    description: Lock issues marked as support requests, value must be either `true` or `false`'
+    default: false
+  issue-lock-reason:
+    description: 'Reason for locking issues, value must be one of `resolved`, `off-topic`, `too heated` or `spam`'
+    default: 'off-topic'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'help-circle'
+  color: 'purple'
