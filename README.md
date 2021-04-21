@@ -38,7 +38,7 @@ All parameters are optional, except `github-token`.
 
 - **`github-token`**
   - GitHub access token, value must be `${{ github.token }}`
-  - Required
+  - Optional, defaults to `${{ github.token }}`
 - **`support-label`**
   - Label used to mark issues as support requests
   - Optional, defaults to `support`
@@ -79,8 +79,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: dessant/support-requests@v2
-        with:
-          github-token: ${{ github.token }}
 ```
 
 ### Available input parameters
@@ -101,7 +99,6 @@ jobs:
     steps:
       - uses: dessant/support-requests@v2
         with:
-          github-token: ${{ github.token }}
           support-label: 'support'
           issue-comment: >
             :wave: @{issue-author}, we use the issue tracker exclusively
