@@ -3,9 +3,6 @@
 Support Requests is a GitHub Action that comments on
 and closes issues labeled as support requests.
 
-> The legacy version of this project can be found
-> [here](https://github.com/dessant/support-requests-app).
-
 ![](assets/screenshot.png)
 
 ## Supporting the Project
@@ -128,7 +125,7 @@ The action uses an installation access token by default to interact with GitHub.
 You may also authenticate with a personal access token to perform actions
 as a GitHub user instead of the `github-actions` app.
 
-Create a [personal access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
+Create a [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 with the `repo` or `public_repo` scopes enabled, and add the token as an
 [encrypted secret](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository)
 for the repository or organization, then provide the action with the secret
@@ -137,7 +134,7 @@ using the `github-token` input parameter.
 <!-- prettier-ignore -->
 ```yaml
     steps:
-      - uses: dessant/label-actions@v2
+      - uses: dessant/support-requests@v2
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 ```
