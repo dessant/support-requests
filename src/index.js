@@ -126,7 +126,14 @@ class App {
         lock.reason = issueData.active_lock_reason;
       }
       await this.client.issues.unlock(issue);
-      await action();
+
+      let actionError;
+      try {
+        await action();
+      } catch (err) {
+        actionError = err;
+      }
+
       if (lock.reason) {
         issue = {
           ...issue,
@@ -137,6 +144,10 @@ class App {
         };
       }
       await this.client.issues.lock(issue);
+
+      if (actionError) {
+        throw actionError;
+      }
     } else {
       await action();
     }
