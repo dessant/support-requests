@@ -72,11 +72,14 @@ marked as support requests.
 
 <!-- prettier-ignore -->
 ```yaml
-name: 'Support requests'
+name: 'Support Requests'
 
 on:
   issues:
     types: [labeled, unlabeled, reopened]
+
+permissions:
+  issues: write
 
 jobs:
   action:
@@ -92,11 +95,14 @@ and their default values. Any of the parameters can be omitted.
 
 <!-- prettier-ignore -->
 ```yaml
-name: 'Support requests'
+name: 'Support Requests'
 
 on:
   issues:
     types: [labeled, unlabeled, reopened]
+
+permissions:
+  issues: write
 
 jobs:
   action:
