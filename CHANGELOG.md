@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/dessant/support-requests/compare/v2.0.1...v2.1.0) (2021-07-09)
+
+
+### Features
+
+* default `github-token` to `github.token` ([#7](https://github.com/dessant/support-requests/issues/7)) ([731cce0](https://github.com/dessant/support-requests/commit/731cce00ca4b42a6ffd5daf63d11386d592c6567))
+* document the use of personal access tokens ([6ba0377](https://github.com/dessant/support-requests/commit/6ba0377537d5719b6b907feabd5e5e3057321cee))
+
+
+### Bug Fixes
+
+* declare required permissions ([692a08a](https://github.com/dessant/support-requests/commit/692a08a4e543e181bc7feb42e2c7c7fe1b3c9d08))
+* lock temporarily unlocked issues even after an error ([182adbd](https://github.com/dessant/support-requests/commit/182adbde03cf78d5a21b696ed2023a2c3d7197c7))
+
 ### [2.0.1](https://github.com/dessant/support-requests/compare/v2.0.0...v2.0.1) (2021-01-01)
 
 
