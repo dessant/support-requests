@@ -27,7 +27,7 @@ is labeled, unlabeled or reopened:
 
 ## Usage
 
-Create a workflow file named `support.yml` in the `.github/workflows` directory,
+Create the `support.yml` workflow file in the `.github/workflows` directory,
 use one of the [example workflows](#examples) to get started.
 
 ### Inputs
