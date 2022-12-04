@@ -82,7 +82,7 @@ jobs:
   action:
     runs-on: ubuntu-latest
     steps:
-      - uses: dessant/support-requests@v2
+      - uses: dessant/support-requests@v3
 ```
 
 ### Available input parameters
@@ -105,7 +105,7 @@ jobs:
   action:
     runs-on: ubuntu-latest
     steps:
-      - uses: dessant/support-requests@v2
+      - uses: dessant/support-requests@v3
         with:
           github-token: ${{ github.token }}
           support-label: 'support'
@@ -134,7 +134,7 @@ using the `github-token` input parameter.
 <!-- prettier-ignore -->
 ```yaml
     steps:
-      - uses: dessant/support-requests@v2
+      - uses: dessant/support-requests@v3
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 ```
