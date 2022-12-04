@@ -141,7 +141,7 @@ using the `github-token` input parameter.
 
 ## License
 
-Copyright (c) 2017-2021 Armin Sebastian
+Copyright (c) 2017-2022 Armin Sebastian
 
 This software is released under the terms of the MIT License.
 See the [LICENSE](LICENSE) file for further information.
