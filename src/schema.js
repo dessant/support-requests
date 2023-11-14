@@ -1,4 +1,4 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
 const schema = Joi.object({
   'github-token': Joi.string().trim().max(100),
@@ -25,4 +25,4 @@ const schema = Joi.object({
     .default('off-topic')
 });
 
-module.exports = schema;
+export {schema};

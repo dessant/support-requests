@@ -1,7 +1,7 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
+import core from '@actions/core';
+import github from '@actions/github';
 
-const schema = require('./schema');
+import {getConfig} from './utils.js';
 
 async function run() {
   try {
@@ -152,19 +152,6 @@ class App {
       await action();
     }
   }
-}
-
-function getConfig() {
-  const input = Object.fromEntries(
-    Object.keys(schema.describe().keys).map(item => [item, core.getInput(item)])
-  );
-
-  const {error, value} = schema.validate(input, {abortEarly: false});
-  if (error) {
-    throw error;
-  }
-
-  return value;
 }
 
 run();
