@@ -1,12 +1,12 @@
 import core from '@actions/core';
 import github from '@actions/github';
 
-import {getConfig} from './utils.js';
+import {getConfig, getClient} from './utils.js';
 
 async function run() {
   try {
     const config = getConfig();
-    const client = github.getOctokit(config['github-token']);
+    const client = getClient(config['github-token']);
 
     const app = new App(config, client);
     if (github.context.payload.action === 'labeled') {
