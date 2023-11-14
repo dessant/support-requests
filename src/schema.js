@@ -1,5 +1,23 @@
 import Joi from 'joi';
 
+const extendedJoi = Joi.extend(joi => {
+  return {
+    type: 'closeReason',
+    base: joi.string(),
+    coerce: {
+      from: 'string',
+      method(value, helpers) {
+        value = value.trim();
+        if (value === 'not planned') {
+          value = 'not_planned';
+        }
+
+        return {value};
+      }
+    }
+  };
+});
+
 const schema = Joi.object({
   'github-token': Joi.string().trim().max(100),
 
@@ -17,6 +35,11 @@ const schema = Joi.object({
     ),
 
   'close-issue': Joi.boolean().default(true),
+
+  'issue-close-reason': extendedJoi
+    .closeReason()
+    .valid('completed', 'not_planned', '')
+    .default('not planned'),
 
   'lock-issue': Joi.boolean().default(true),
 

@@ -53,6 +53,10 @@ The action can be configured using [input parameters](https://docs.github.com/en
   - Close issues marked as support requests,
     value must be either `true` or `false`
   - Optional, defaults to `true`
+- **`issue-close-reason`**
+  - Reason for closing issues, value must be
+    either `completed` or `not planned`
+  - Optional, defaults to `not planned`
 - **`lock-issue`**
   - Lock issues marked as support requests,
     value must be either `true` or `false`
@@ -115,6 +119,7 @@ jobs:
             to be a support request. Please use our support channels
             to get help with the project.
           close-issue: true
+          issue-close-reason: 'not planned'
           lock-issue: false
           issue-lock-reason: 'off-topic'
 ```

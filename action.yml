@@ -17,6 +17,9 @@ inputs:
   close-issue:
     description: 'Close issues marked as support requests, value must be either `true` or `false`'
     default: true
+  issue-close-reason:
+    description: 'Reason for closing issues, value must be either `completed` or `not planned`'
+    default: 'not planned'
   lock-issue:
     description: Lock issues marked as support requests, value must be either `true` or `false`'
     default: false

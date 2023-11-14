@@ -54,7 +54,15 @@ class App {
 
     if (this.config['close-issue'] && issueData.state === 'open') {
       core.debug(`Closing (issue: ${issue.issue_number})`);
-      await this.client.rest.issues.update({...issue, state: 'closed'});
+
+      const params = {...issue, state: 'closed'};
+
+      const closeReason = this.config['issue-close-reason'];
+      if (closeReason) {
+        params.state_reason = closeReason;
+      }
+
+      await this.client.rest.issues.update(params);
     }
 
     if (this.config['lock-issue'] && !issueData.locked) {
