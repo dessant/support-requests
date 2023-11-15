@@ -38,13 +38,18 @@ class App {
     const comment = this.config['issue-comment'];
     if (comment) {
       core.debug(`Commenting (issue: ${issue.issue_number})`);
+
       const commentBody = comment.replace(
         /{issue-author}/,
         issueData.user.login
       );
       await this.ensureUnlock(
         issue,
-        {active: issueData.locked, reason: issueData.active_lock_reason},
+        {
+          active: issueData.locked,
+          reason: issueData.active_lock_reason,
+          restoreLock: !this.config['lock-issue']
+        },
         () =>
           this.client.rest.issues
             .createComment({...issue, body: commentBody})
@@ -52,34 +57,39 @@ class App {
       );
     }
 
-    if (this.config['close-issue'] && issueData.state === 'open') {
+    const closeReason = this.config['issue-close-reason'];
+    if (
+      this.config['close-issue'] &&
+      (issueData.state === 'open' || issueData.state_reason !== closeReason)
+    ) {
       core.debug(`Closing (issue: ${issue.issue_number})`);
 
-      const params = {...issue, state: 'closed'};
-
-      const closeReason = this.config['issue-close-reason'];
-      if (closeReason) {
-        params.state_reason = closeReason;
-      }
-
-      await this.client.rest.issues.update(params);
+      await this.client.rest.issues.update({
+        ...issue,
+        state: 'closed',
+        state_reason: closeReason
+      });
     }
 
-    if (this.config['lock-issue'] && !issueData.locked) {
+    const lockReason = this.config['issue-lock-reason'] || null;
+    if (
+      this.config['lock-issue'] &&
+      (!issueData.locked || issueData.active_lock_reason !== lockReason)
+    ) {
       core.debug(`Locking (issue: ${issue.issue_number})`);
-      let params;
-      const lockReason = this.config['issue-lock-reason'];
+
+      const params = {...issue};
+
       if (lockReason) {
-        params = {
-          ...issue,
-          lock_reason: lockReason,
-          headers: {
-            accept: 'application/vnd.github.sailor-v-preview+json'
-          }
-        };
-      } else {
-        params = issue;
+        params.lock_reason = lockReason;
       }
+
+      // Lock reason is not updated when issue is locked
+      // Issue is unlocked before posting comment
+      if (issueData.active_lock_reason !== lockReason && !comment) {
+        await this.client.rest.issues.unlock(issue);
+      }
+
       await this.client.rest.issues.lock(params);
     }
   }
@@ -94,11 +104,13 @@ class App {
 
     if (this.config['close-issue'] && issueData.state === 'closed') {
       core.debug(`Reopening (issue: ${issue.issue_number})`);
+
       await this.client.rest.issues.update({...issue, state: 'open'});
     }
 
     if (this.config['lock-issue'] && issueData.locked) {
       core.debug(`Unlocking (issue: ${issue.issue_number})`);
+
       await this.client.rest.issues.unlock(issue);
     }
   }
@@ -114,10 +126,12 @@ class App {
     const issue = {...github.context.repo, issue_number: issueData.number};
 
     core.debug(`Unlabeling (issue: ${issue.issue_number})`);
+
     await this.client.rest.issues.removeLabel({...issue, name: supportLabel});
 
     if (this.config['lock-issue'] && issueData.locked) {
       core.debug(`Unlocking (issue: ${issue.issue_number})`);
+
       await this.client.rest.issues.unlock(issue);
     }
   }
@@ -125,14 +139,10 @@ class App {
   async ensureUnlock(issue, lock, action) {
     if (lock.active) {
       if (!lock.hasOwnProperty('reason')) {
-        const {data: issueData} = await this.client.rest.issues.get({
-          ...issue,
-          headers: {
-            Accept: 'application/vnd.github.sailor-v-preview+json'
-          }
-        });
+        const {data: issueData} = await this.client.rest.issues.get(issue);
         lock.reason = issueData.active_lock_reason;
       }
+
       await this.client.rest.issues.unlock(issue);
 
       let actionError;
@@ -142,16 +152,13 @@ class App {
         actionError = err;
       }
 
-      if (lock.reason) {
-        issue = {
-          ...issue,
-          lock_reason: lock.reason,
-          headers: {
-            Accept: 'application/vnd.github.sailor-v-preview+json'
-          }
-        };
+      if (lock.restoreLock) {
+        if (lock.reason) {
+          issue = {...issue, lock_reason: lock.reason};
+        }
+
+        await this.client.rest.issues.lock(issue);
       }
-      await this.client.rest.issues.lock(issue);
 
       if (actionError) {
         throw actionError;

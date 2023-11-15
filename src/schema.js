@@ -38,7 +38,7 @@ const schema = Joi.object({
 
   'issue-close-reason': extendedJoi
     .closeReason()
-    .valid('completed', 'not_planned', '')
+    .valid('completed', 'not_planned')
     .default('not planned'),
 
   'lock-issue': Joi.boolean().default(true),
