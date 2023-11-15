@@ -1,6 +1,24 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [4.0.0](https://github.com/dessant/support-requests/compare/v3.0.0...v4.0.0) (2023-11-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* the action now requires Node.js 20
+
+### Features
+
+* set close reason ([cb26bc2](https://github.com/dessant/support-requests/commit/cb26bc2f96dccbf470d41a582ba8815e262928fa)), closes [#10](https://github.com/dessant/support-requests/issues/10)
+
+
+### Bug Fixes
+
+* always apply close and lock reason ([7e8888e](https://github.com/dessant/support-requests/commit/7e8888e8b42b2ea7092921e6f6997484c8cb8366))
+* retry and throttle GitHub API requests ([2755608](https://github.com/dessant/support-requests/commit/2755608ece89dbb09f6d5d4e89ff0d3cb7440733))
+* update dependencies ([008bb20](https://github.com/dessant/support-requests/commit/008bb205a4a418c16886a3aa05ea457c3038e08c))
 
 ## [3.0.0](https://github.com/dessant/support-requests/compare/v2.1.2...v3.0.0) (2022-12-04)
 
