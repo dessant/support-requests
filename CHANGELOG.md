@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0](https://github.com/dessant/support-requests/compare/v4.0.0...v5.0.0) (2026-05-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* the action now requires Node.js 24
+
+### Bug Fixes
+
+* update dependencies ([5188f63](https://github.com/dessant/support-requests/commit/5188f6371ba65ff20d1668dfced74bae52be35b7))
+
 ## [4.0.0](https://github.com/dessant/support-requests/compare/v3.0.0...v4.0.0) (2023-11-15)
 
 
