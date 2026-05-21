@@ -1,5 +1,5 @@
-import core from '@actions/core';
-import github from '@actions/github';
+import {debug, setFailed, warning} from '@actions/core';
+import {context} from '@actions/github';
 
 import {getConfig, getClient} from './utils.js';
 
@@ -9,15 +9,15 @@ async function run() {
     const client = getClient(config['github-token']);
 
     const app = new App(config, client);
-    if (github.context.payload.action === 'labeled') {
+    if (context.payload.action === 'labeled') {
       await app.labeled();
-    } else if (github.context.payload.action === 'unlabeled') {
+    } else if (context.payload.action === 'unlabeled') {
       await app.unlabeled();
-    } else if (github.context.payload.action === 'reopened') {
+    } else if (context.payload.action === 'reopened') {
       await app.reopened();
     }
   } catch (err) {
-    core.setFailed(err);
+    setFailed(err);
   }
 }
 
@@ -28,16 +28,16 @@ class App {
   }
 
   async labeled() {
-    if (github.context.payload.label.name !== this.config['support-label']) {
+    if (context.payload.label.name !== this.config['support-label']) {
       return;
     }
 
-    const issueData = github.context.payload.issue;
-    const issue = {...github.context.repo, issue_number: issueData.number};
+    const issueData = context.payload.issue;
+    const issue = {...context.repo, issue_number: issueData.number};
 
     const comment = this.config['issue-comment'];
     if (comment) {
-      core.debug(`Commenting (issue: ${issue.issue_number})`);
+      debug(`Commenting (issue: ${issue.issue_number})`);
 
       const commentBody = comment.replace(
         /{issue-author}/,
@@ -53,7 +53,7 @@ class App {
         () =>
           this.client.rest.issues
             .createComment({...issue, body: commentBody})
-            .catch(err => core.warning(err.toString()))
+            .catch(err => warning(err.toString()))
       );
     }
 
@@ -62,7 +62,7 @@ class App {
       this.config['close-issue'] &&
       (issueData.state === 'open' || issueData.state_reason !== closeReason)
     ) {
-      core.debug(`Closing (issue: ${issue.issue_number})`);
+      debug(`Closing (issue: ${issue.issue_number})`);
 
       await this.client.rest.issues.update({
         ...issue,
@@ -76,7 +76,7 @@ class App {
       this.config['lock-issue'] &&
       (!issueData.locked || issueData.active_lock_reason !== lockReason)
     ) {
-      core.debug(`Locking (issue: ${issue.issue_number})`);
+      debug(`Locking (issue: ${issue.issue_number})`);
 
       const params = {...issue};
 
@@ -95,42 +95,42 @@ class App {
   }
 
   async unlabeled() {
-    if (github.context.payload.label.name !== this.config['support-label']) {
+    if (context.payload.label.name !== this.config['support-label']) {
       return;
     }
 
-    const issueData = github.context.payload.issue;
-    const issue = {...github.context.repo, issue_number: issueData.number};
+    const issueData = context.payload.issue;
+    const issue = {...context.repo, issue_number: issueData.number};
 
     if (this.config['close-issue'] && issueData.state === 'closed') {
-      core.debug(`Reopening (issue: ${issue.issue_number})`);
+      debug(`Reopening (issue: ${issue.issue_number})`);
 
       await this.client.rest.issues.update({...issue, state: 'open'});
     }
 
     if (this.config['lock-issue'] && issueData.locked) {
-      core.debug(`Unlocking (issue: ${issue.issue_number})`);
+      debug(`Unlocking (issue: ${issue.issue_number})`);
 
       await this.client.rest.issues.unlock(issue);
     }
   }
 
   async reopened() {
-    const issueData = github.context.payload.issue;
+    const issueData = context.payload.issue;
     const supportLabel = this.config['support-label'];
 
     if (!issueData.labels.map(label => label.name).includes(supportLabel)) {
       return;
     }
 
-    const issue = {...github.context.repo, issue_number: issueData.number};
+    const issue = {...context.repo, issue_number: issueData.number};
 
-    core.debug(`Unlabeling (issue: ${issue.issue_number})`);
+    debug(`Unlabeling (issue: ${issue.issue_number})`);
 
     await this.client.rest.issues.removeLabel({...issue, name: supportLabel});
 
     if (this.config['lock-issue'] && issueData.locked) {
-      core.debug(`Unlocking (issue: ${issue.issue_number})`);
+      debug(`Unlocking (issue: ${issue.issue_number})`);
 
       await this.client.rest.issues.unlock(issue);
     }

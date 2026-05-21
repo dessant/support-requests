@@ -27,7 +27,7 @@ inputs:
     description: 'Reason for locking issues, value must be one of `resolved`, `off-topic`, `too heated` or `spam`'
     default: 'off-topic'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
 branding:
   icon: 'help-circle'
