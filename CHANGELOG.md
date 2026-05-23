@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.2](https://github.com/dessant/support-requests/compare/v5.0.1...v5.0.2) (2026-05-23)
+
+
+### Bug Fixes
+
+* update package ([d2dc2ca](https://github.com/dessant/support-requests/commit/d2dc2ca2c5baab5fd57fa33db123ce3c912251a0))
+
 ## [5.0.1](https://github.com/dessant/support-requests/compare/v5.0.0...v5.0.1) (2026-05-23)
 
 
