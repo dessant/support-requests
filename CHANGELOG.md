@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.1](https://github.com/dessant/support-requests/compare/v5.0.0...v5.0.1) (2026-05-23)
+
+
+### Bug Fixes
+
+* update github-token validation schema ([247766c](https://github.com/dessant/support-requests/commit/247766c362b8b696ef69353f4b78faa2948cdf97))
+
 ## [5.0.0](https://github.com/dessant/support-requests/compare/v4.0.0...v5.0.0) (2026-05-21)
 
 
