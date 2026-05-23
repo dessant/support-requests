@@ -54827,7 +54827,7 @@ const extendedJoi = joi_lib.extend(joi => {
 });
 
 const schema = joi_lib.object({
-  'github-token': joi_lib.string().trim().max(100),
+  'github-token': joi_lib.string().trim().max(1000),
 
   'support-label': joi_lib.string().trim().max(50).default('support'),
 
